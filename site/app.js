@@ -1,10 +1,29 @@
-const API_BASE = "http://localhost:8001"; // ← Servidor local para desarrollo
+const API_BASE = "https://agent-poc.kvothesson.workers.dev"; // ← URL del Worker deployado
 
 const chatEl = document.getElementById('chat');
 const inputEl = document.getElementById('input');
 const sendBtn = document.getElementById('send');
 
-let business = null; // Se cargará desde business.json
+const business = { // opcional: sobreescribir el perfil por request
+  id: 'ring-jewelers',
+  name: 'Ring Jewelers',
+  defaultLocale: 'es-AR',
+  currency: 'ARS',
+  tone: { style: 'cálido, cercano, vendedor experto, emojis moderados', signoff: '¡Quedo atento a cualquier consulta!' },
+  policies: { delivery: 'Entregas en 3 a 7 días hábiles.', returns: 'Cambios dentro de 10 días con ticket.', disclaimer: 'Precios sujetos a actualización.', stock: 'Stock sujeto a confirmación.' },
+  payments: {
+    discounts: [
+      { label: '15% descuento en efectivo', percent: 15, key: 'cash' },
+      { label: '10% descuento por transferencia', percent: 10, key: 'bank' }
+    ],
+    installments: { count: 3, noInterest: true, label: '3 pagos sin interés con tarjeta bancaria' }
+  },
+  catalog: [
+    { sku: 'A', title: 'Cintillo Oro Blanco 18k con zafiros y circones', price: 633800, weight_g: 1.7 },
+    { sku: 'B', title: 'Cintillo Oro Blanco 18k, 5 circones', price: 720000, weight_g: 2.7 },
+    { sku: 'C', title: 'Cintillo Oro Blanco 18k con circones pequeños', price: 520000, weight_g: 1.9 }
+  ]
+};
 
 const history = [];
 
@@ -16,32 +35,9 @@ function addMsg(text, who) {
   chatEl.scrollTop = chatEl.scrollHeight;
 }
 
-async function loadBusinessProfile() {
-  try {
-    const response = await fetch('./data/business.json');
-    business = await response.json();
-    console.log('Perfil de negocio cargado:', business);
-  } catch (error) {
-    console.error('Error cargando perfil de negocio:', error);
-    // Fallback mínimo en caso de error
-    business = {
-      id: 'ring-jewelers',
-      name: 'Ring Jewelers',
-      defaultLocale: 'es-AR',
-      currency: 'ARS'
-    };
-  }
-}
-
 async function send() {
   const text = inputEl.value.trim();
   if (!text) return;
-  
-  if (!business) {
-    addMsg('Cargando perfil de negocio...', 'bot');
-    await loadBusinessProfile();
-  }
-  
   addMsg(text, 'user');
   inputEl.value = '';
   try {
@@ -61,7 +57,4 @@ async function send() {
 sendBtn.addEventListener('click', send);
 inputEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') send(); });
 
-// Cargar perfil al iniciar
-loadBusinessProfile().then(() => {
-  addMsg('¡Hola! Soy tu asesor virtual. ¿Qué estás buscando hoy? 😊', 'bot');
-});
+addMsg('¡Hola! Soy tu asesor virtual. ¿Qué estás buscando hoy? 😊', 'bot');
