@@ -1,4 +1,4 @@
-const API_BASE = "https://agent-poc.kvothesson.workers.dev"; // ← URL del Worker deployado
+const API_BASE = "http://localhost:8001"; // ← Servidor local para desarrollo
 
 const chatEl = document.getElementById('chat');
 const inputEl = document.getElementById('input');
