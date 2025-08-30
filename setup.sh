@@ -23,13 +23,12 @@ npm install
 echo "✅ Dependencias instaladas"
 
 # Crear archivo .env.example si no existe
-if [ ! -f "worker/.env.example" ]; then
+if [ ! -f ".env.example" ]; then
     echo "📝 Creando archivo de ejemplo de variables de entorno..."
-    cat > worker/.env.example << EOF
+    cat > .env.example << EOF
 # Copia este archivo a .env y configura tus variables
-GROQ_API_KEY=tu_api_key_aqui
-GROQ_MODEL=llama3-70b-8192
-BUSINESS_JSON_URL=http://localhost:3001/business.json
+# GROQ_API_KEY=tu_api_key_aqui (opcional para funcionalidad de chat)
+# GROQ_MODEL=llama3-70b-8192
 EOF
 fi
 
@@ -37,13 +36,11 @@ echo ""
 echo "🎯 Configuración completada!"
 echo ""
 echo "📋 Próximos pasos:"
-echo "1. Configura tu GROQ_API_KEY en el dashboard de Cloudflare Workers"
-echo "2. Ejecuta: npm run dev"
-echo "3. Abre http://localhost:3000 en tu navegador"
+echo "1. Ejecuta: npm run dev"
+echo "2. Abre http://localhost:3000 en tu navegador"
 echo ""
 echo "🔧 Para desarrollo:"
 echo "  - Servidor de datos: http://localhost:3001"
 echo "  - Frontend: http://localhost:3000"
-echo "  - Worker: https://agent-poc.kvothesson.workers.dev"
 echo ""
 echo "📚 Más información en README.md"

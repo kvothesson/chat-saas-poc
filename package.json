@@ -5,8 +5,8 @@
   "scripts": {
     "dev:data": "node site/serve-data.js",
     "dev:site": "cd site && python3 -m http.server 3000",
-    "dev": "concurrently \"npm run dev:data\" \"npm run dev:site\"",
-    "deploy:worker": "cd worker && wrangler deploy"
+    "dev:backend": "source venv/bin/activate && python app.py",
+    "dev": "concurrently \"npm run dev:data\" \"npm run dev:site\" \"npm run dev:backend\""
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

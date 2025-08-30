@@ -6,7 +6,6 @@ Un proof of concept de un sistema de chat comercial SaaS con datos centralizados
 
 - **`data/business.json`**: Fuente única de verdad para la información del negocio
 - **`site/`**: Frontend web con chat
-- **`worker/`**: Worker de Cloudflare que maneja la lógica del chat
 - **Datos centralizados**: No más duplicación de información entre archivos
 
 ## 🚀 Desarrollo
@@ -17,11 +16,7 @@ npm install
 ```
 
 ### 2. Configurar variables de entorno
-En `worker/wrangler.toml`, asegúrate de tener:
-```toml
-[vars]
-BUSINESS_JSON_URL = "http://localhost:3001/business.json"
-```
+No se requieren variables de entorno para ejecución local.
 
 ### 3. Ejecutar entorno de desarrollo
 ```bash
@@ -33,19 +28,16 @@ Esto iniciará:
 - Frontend en `http://localhost:3000`
 
 ### 4. Configurar API Key de Groq
-En el dashboard de Cloudflare Workers, agrega la variable secreta `GROQ_API_KEY`.
+Para usar la funcionalidad de chat, configura tu API key de Groq en el archivo de configuración local.
 
 ## 🚀 Producción
 
 ### 1. Actualizar URL del business.json
-En `worker/wrangler.toml`, cambia:
-```toml
-BUSINESS_JSON_URL = "https://raw.githubusercontent.com/<user>/<repo>/main/data/business.json"
-```
+Para producción, actualiza la URL del archivo business.json en tu configuración local.
 
-### 2. Deploy del worker
+### 2. Deploy del sitio
 ```bash
-npm run deploy:worker
+# Deploy del frontend a cualquier hosting estático
 ```
 
 ## 📁 Estructura del Proyecto
@@ -57,9 +49,6 @@ npm run deploy:worker
 │   ├── app.js                 # ✅ Carga datos desde JSON
 │   ├── index.html
 │   └── serve-data.js          # ✅ Servidor local para desarrollo
-├── worker/
-│   ├── src/index.ts           # ✅ Lee datos desde URL configurada
-│   └── wrangler.toml          # ✅ Configuración de variables
 └── package.json               # ✅ Scripts de desarrollo
 ```
 
@@ -67,8 +56,7 @@ npm run deploy:worker
 
 1. **`data/business.json`** contiene toda la información del negocio
 2. **`site/app.js`** carga los datos al inicializar
-3. **`worker/src/index.ts`** lee los datos desde la URL configurada
-4. **No hay duplicación** - un solo lugar para mantener la información
+3. **No hay duplicación** - un solo lugar para mantener la información
 
 ## 🎯 Beneficios
 

@@ -4,9 +4,8 @@ Get your AI commercial agent running in 5 minutes!
 
 ## Prerequisites
 
-- [Groq API Key](https://console.groq.com/) (free tier available)
-- [Cloudflare Account](https://dash.cloudflare.com/) (free)
 - Node.js 18+ installed
+- Python 3.8+ (para el entorno virtual)
 
 ## ⚡ 5-Minute Setup
 
@@ -16,29 +15,18 @@ git clone <your-repo>
 cd chat-saas-poc
 ```
 
-### 2. Deploy Worker (Auto)
+### 2. Setup Local Environment
 ```bash
-./deploy.sh
+./setup.sh
 ```
 
-**Or manually:**
+### 3. Run Locally
 ```bash
-cd worker
-npm install
-npm run deploy
+npm run dev
 ```
 
-### 3. Configure API Key
-1. Go to [Cloudflare Dashboard](https://dash.cloudflare.com/)
-2. Workers & Pages → Find your worker
-3. Settings → Variables → Add Variable
-4. **Name:** `GROQ_API_KEY` | **Value:** Your Groq API key | **Type:** Secret
-
-### 4. Update Frontend
-In `site/app.js`, change:
-```js
-const API_BASE = "https://YOUR_WORKER_NAME.workers.dev";
-```
+### 4. Test Locally
+Open http://localhost:3000 in your browser
 
 ### 5. Deploy Frontend
 Upload `site/` folder to:
@@ -75,19 +63,17 @@ Edit `data/business.json` or create new ones for:
 
 ## 📊 What You Get
 
-- ✅ AI agent that talks like a human salesperson
-- ✅ Automatic price calculations (discounts, installments)
-- ✅ Multi-language support (Spanish/English)
-- ✅ WhatsApp-style chat interface
-- ✅ 100% free infrastructure
-- ✅ Only pay for Groq API calls (~$0.05 per 1M tokens)
+- ✅ Local development environment
+- ✅ Business data management
+- ✅ WhatsApp-style chat interface (frontend only)
+- ✅ Easy to extend with custom backend
 
 ## 🆘 Need Help?
 
 - Check [README.md](README.md) for detailed docs
 - Open an issue for bugs
-- The agent only uses catalog data (no hallucinations!)
+- The application runs completely locally
 
 ---
 
-**Ready to sell?** Your AI agent is live! 🎉
+**Ready to develop?** Your local environment is set up! 🎉
