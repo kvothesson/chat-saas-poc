@@ -1,0 +1,58 @@
+{
+  "id": "sweet-bakery",
+  "name": "Sweet Bakery",
+  "defaultLocale": "es-AR",
+  "currency": "ARS",
+  "tone": {
+    "style": "dulce, acogedor, experto en repostería, emojis de comida",
+    "signoff": "¡Esperamos tu pedido con mucha ilusión! 🧁"
+  },
+  "policies": {
+    "delivery": "Entregas en 2 a 4 horas para pedidos del día.",
+    "returns": "No se aceptan devoluciones por higiene.",
+    "disclaimer": "Precios pueden variar según ingredientes de temporada.",
+    "stock": "Productos frescos horneados diariamente."
+  },
+  "payments": {
+    "discounts": [
+      {"label": "20% descuento en efectivo", "percent": 20, "key": "cash"},
+      {"label": "15% descuento por transferencia", "percent": 15, "key": "bank"},
+      {"label": "10% descuento por pedidos mayores a $5000", "percent": 10, "key": "bulk"}
+    ],
+    "installments": {
+      "count": 6,
+      "noInterest": true,
+      "label": "6 pagos sin interés con tarjeta bancaria"
+    }
+  },
+  "catalog": [
+    {
+      "sku": "CUP-001",
+      "title": "Cupcakes de Vainilla con Buttercream",
+      "price": 1200,
+      "weight_g": 80,
+      "attrs": {"sabor": "Vainilla", "cobertura": "Buttercream", "decoración": "Sprinkles"}
+    },
+    {
+      "sku": "TORT-001",
+      "title": "Torta de Chocolate 3 Capas",
+      "price": 8500,
+      "weight_g": 1200,
+      "attrs": {"sabor": "Chocolate", "capas": "3", "relleno": "Ganache"}
+    },
+    {
+      "sku": "PAN-001",
+      "title": "Pan de Masa Madre Artesanal",
+      "price": 800,
+      "weight_g": 500,
+      "attrs": {"tipo": "Masa Madre", "peso": "500g", "ingredientes": "Harina, agua, sal"}
+    },
+    {
+      "sku": "GAL-001",
+      "title": "Galletas de Mantequilla Decoradas",
+      "price": 1800,
+      "weight_g": 300,
+      "attrs": {"sabor": "Mantequilla", "decoración": "Personalizada", "cantidad": "12 unidades"}
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+name = "agent-poc"
+main = "src/index.ts"
+compatibility_date = "2024-09-01"
+
+[vars]
+GROQ_MODEL = "llama3-70b-8192" # opcional
+# BUSINESS_JSON_URL = "https://raw.githubusercontent.com/<user>/<repo>/main/data/business.json"
+
+# En el dashboard de Cloudflare → Settings → Variables, agrega GROQ_API_KEY (secreto)
