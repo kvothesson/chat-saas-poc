@@ -1,6 +1,6 @@
 {
-  "id": "ring-jewelers",
-  "name": "Ring Jewelers",
+  "id": "hervor",
+  "name": "Hervor",
   "defaultLocale": "es-AR",
   "currency": "ARS",
   "tone": {
@@ -8,43 +8,214 @@
     "signoff": "¡Quedo atento a cualquier consulta!"
   },
   "policies": {
-    "delivery": "Entregas en 3 a 7 días hábiles.",
-    "returns": "Cambios dentro de 10 días con ticket.",
+    "delivery": "Envíos a CABA y Zona Norte. Envío gratis a partir de $150.000. Retiro en Don Bosco 141, San Isidro.",
+    "returns": "Botón de arrepentimiento y cancelaciones según Resolución 424/2020 de la Secretaría de Comercio Interior.",
     "disclaimer": "Precios sujetos a actualización.",
     "stock": "Stock sujeto a confirmación."
   },
   "payments": {
-    "discounts": [
-      {"label": "15% descuento en efectivo", "percent": 15, "key": "cash"},
-      {"label": "10% descuento por transferencia", "percent": 10, "key": "bank"}
+    "methods": [
+      "Mercado Pago",
+      "Transferencia bancaria",
+      "Efectivo"
     ],
+    "discounts": [],
     "installments": {
-      "count": 3,
-      "noInterest": true,
-      "label": "3 pagos sin interés con tarjeta bancaria"
+      "count": null,
+      "noInterest": null,
+      "label": "Ver cuotas y descuentos disponibles en la página de cada producto / Mercado Pago"
     }
+  },
+  "shipping": {
+    "areas": ["CABA", "Zona Norte"],
+    "freeShippingThresholdARS": 150000
+  },
+  "contact": {
+    "email": "hervor.cocina@gmail.com",
+    "phone": "+54 9 11 6499-7200",
+    "address": "Don Bosco 141, San Isidro, Buenos Aires, Argentina",
+    "instagram": "https://instagram.com/hervor.cocina"
   },
   "catalog": [
     {
-      "sku": "A",
-      "title": "Cintillo Oro Blanco 18k con zafiros y circones",
-      "price": 633800,
-      "weight_g": 1.7,
-      "attrs": {"metal": "Oro Blanco 18k", "stones": "zafiros azules y circones blancos"}
+      "sku": "PP-PM-CALAB",
+      "title": "Pata muslo con calabazas asadas",
+      "price": 12500,
+      "attrs": {"category": "Platos principales", "segment": "Carnes", "tags": ["sin tacc"] }
     },
     {
-      "sku": "B",
-      "title": "Cintillo Oro Blanco 18k, 5 circones",
-      "price": 720000,
-      "weight_g": 2.7,
-      "attrs": {"metal": "Oro Blanco 18k", "stones": "5 circones"}
+      "sku": "PP-CORD-PURE",
+      "title": "Cordero con puré de papa, ajos asados y romero",
+      "price": 19800,
+      "attrs": {"category": "Platos principales", "segment": "Carnes", "tags": ["sin tacc"] }
     },
     {
-      "sku": "C",
-      "title": "Cintillo Oro Blanco 18k con circones pequeños",
-      "price": 520000,
-      "weight_g": 1.9,
-      "attrs": {"metal": "Oro Blanco 18k", "stones": "circones pequeños"}
+      "sku": "PP-CRL-ARBAS",
+      "title": "Curry rojo de langostinos y arroz basmati",
+      "price": 14900,
+      "attrs": {"category": "Platos principales", "segment": "Pescado y mariscos", "tags": ["sin tacc"] }
+    },
+    {
+      "sku": "PP-SALM-COUS",
+      "title": "Salmón con cous cous marroquí",
+      "price": 25500,
+      "attrs": {"category": "Platos principales", "segment": "Pescado y mariscos" }
+    },
+    {
+      "sku": "PP-BROT-ESP",
+      "title": "Brótola con crema de espinacas",
+      "price": 15200,
+      "attrs": {"category": "Platos principales", "segment": "Pescado y mariscos", "tags": ["sin tacc"] }
+    },
+    {
+      "sku": "PP-QL-SALTEADO",
+      "title": "Salteado de quinoa",
+      "price": 11500,
+      "attrs": {"category": "Platos principales", "segment": "Vegetariano", "tags": ["vegano", "sin tacc"] }
+    },
+    {
+      "sku": "PP-CURR-V-ARBAS",
+      "title": "Curry vegetariano y arroz basmati",
+      "price": 11500,
+      "attrs": {"category": "Platos principales", "segment": "Vegetariano", "tags": ["sin tacc"] }
+    },
+    {
+      "sku": "PP-RISOTTO-H",
+      "title": "Risotto de hongos",
+      "price": 11500,
+      "attrs": {"category": "Platos principales", "segment": "Vegetariano", "tags": ["sin tacc"] }
+    },
+    {
+      "sku": "PP-SORR-LANG",
+      "title": "Sorrentinos de langostinos",
+      "price": 12500,
+      "attrs": {"category": "Platos principales", "segment": "Pastas" }
+    },
+    {
+      "sku": "PP-SORR-MEDIT",
+      "title": "Sorrentinos mediterráneos",
+      "price": 12000,
+      "attrs": {"category": "Platos principales", "segment": "Pastas", "stock": "sin stock" }
+    },
+    {
+      "sku": "PP-GOUL-SPAETZ",
+      "title": "Goulash con spaetzle",
+      "price": 13600,
+      "attrs": {"category": "Platos principales", "segment": "Carnes" }
+    },
+    {
+      "sku": "PP-LENTEJAS",
+      "title": "Guiso de lentejas",
+      "price": 13600,
+      "attrs": {"category": "Platos principales", "segment": "Cuchara" }
+    },
+    {
+      "sku": "GUA-BATATA",
+      "title": "Puré cremoso de batata ahumada",
+      "price": 4600,
+      "attrs": {"category": "Guarniciones" }
+    },
+    {
+      "sku": "GUA-PURE-PAPA",
+      "title": "Puré de papa, ajos asados y romero",
+      "price": 4600,
+      "attrs": {"category": "Guarniciones" }
+    },
+    {
+      "sku": "GUA-PAPINES",
+      "title": "Papines en manteca de hierbas frescas",
+      "price": 4600,
+      "attrs": {"category": "Guarniciones" }
+    },
+    {
+      "sku": "GUA-COUS",
+      "title": "Cous cous marroquí",
+      "price": 4600,
+      "attrs": {"category": "Guarniciones" }
+    },
+    {
+      "sku": "GUA-ARBAS",
+      "title": "Arroz basmati",
+      "price": 4600,
+      "attrs": {"category": "Guarniciones" }
+    },
+    {
+      "sku": "GUA-ARROZ-MIX",
+      "title": "Mix de arroces integrales y sésamo",
+      "price": 4600,
+      "attrs": {"category": "Guarniciones" }
+    },
+    {
+      "sku": "GUA-CALAB",
+      "title": "Calabazas asadas",
+      "price": 4600,
+      "attrs": {"category": "Guarniciones" }
+    },
+    {
+      "sku": "GUA-VERD-ASADAS",
+      "title": "Verduras asadas",
+      "price": 4600,
+      "attrs": {"category": "Guarniciones" }
+    },
+    {
+      "sku": "POS-BOUCH-CARAM",
+      "title": "Bouchon Caramelia - Finger",
+      "price": 16000,
+      "attrs": {"category": "Postres" }
+    },
+    {
+      "sku": "POS-BOUCH-DULCE",
+      "title": "Bouchon de dulce de leche - Finger",
+      "price": 16000,
+      "attrs": {"category": "Postres" }
+    },
+    {
+      "sku": "POS-PATAGONIA",
+      "title": "Patagonia - Finger",
+      "price": 16800,
+      "attrs": {"category": "Postres" }
+    },
+    {
+      "sku": "POS-NOTTING",
+      "title": "Notting Hill - Finger",
+      "price": 15000,
+      "attrs": {"category": "Postres" }
+    },
+    {
+      "sku": "POS-SOHO",
+      "title": "Soho - Finger",
+      "price": 16000,
+      "attrs": {"category": "Postres" }
+    },
+    {
+      "sku": "POS-ALPINE",
+      "title": "Alpine",
+      "price": 16400,
+      "attrs": {"category": "Postres" }
+    },
+    {
+      "sku": "POS-CHOCOTOR",
+      "title": "Chocotorta - Finger",
+      "price": 14000,
+      "attrs": {"category": "Postres" }
+    },
+    {
+      "sku": "POS-LEMON",
+      "title": "Lemon Pie - Finger",
+      "price": 14000,
+      "attrs": {"category": "Postres" }
+    },
+    {
+      "sku": "POS-KEYLIME",
+      "title": "Key Lime Pie",
+      "price": 14500,
+      "attrs": {"category": "Postres" }
+    },
+    {
+      "sku": "POS-CARROT",
+      "title": "Carrot cake - Finger",
+      "price": 13000,
+      "attrs": {"category": "Postres" }
     }
   ]
 }
