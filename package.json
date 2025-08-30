@@ -1,0 +1,14 @@
+{
+  "name": "chat-saas-poc",
+  "version": "1.0.0",
+  "description": "Chat SaaS Proof of Concept with centralized business data",
+  "scripts": {
+    "dev:data": "node site/serve-data.js",
+    "dev:site": "cd site && python3 -m http.server 3000",
+    "dev": "concurrently \"npm run dev:data\" \"npm run dev:site\"",
+    "deploy:worker": "cd worker && wrangler deploy"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

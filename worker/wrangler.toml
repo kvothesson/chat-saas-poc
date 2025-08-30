@@ -4,6 +4,9 @@ compatibility_date = "2024-09-01"
 
 [vars]
 GROQ_MODEL = "llama3-70b-8192" # opcional
+# Para desarrollo local:
+BUSINESS_JSON_URL = "http://localhost:3001/business.json"
+# Para producción (descomenta y ajusta la URL):
 # BUSINESS_JSON_URL = "https://raw.githubusercontent.com/<user>/<repo>/main/data/business.json"
 
 # En el dashboard de Cloudflare → Settings → Variables, agrega GROQ_API_KEY (secreto)

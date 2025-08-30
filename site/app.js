@@ -4,26 +4,28 @@ const chatEl = document.getElementById('chat');
 const inputEl = document.getElementById('input');
 const sendBtn = document.getElementById('send');
 
-const business = { // opcional: sobreescribir el perfil por request
-  id: 'ring-jewelers',
-  name: 'Ring Jewelers',
-  defaultLocale: 'es-AR',
-  currency: 'ARS',
-  tone: { style: 'cálido, cercano, vendedor experto, emojis moderados', signoff: '¡Quedo atento a cualquier consulta!' },
-  policies: { delivery: 'Entregas en 3 a 7 días hábiles.', returns: 'Cambios dentro de 10 días con ticket.', disclaimer: 'Precios sujetos a actualización.', stock: 'Stock sujeto a confirmación.' },
-  payments: {
-    discounts: [
-      { label: '15% descuento en efectivo', percent: 15, key: 'cash' },
-      { label: '10% descuento por transferencia', percent: 10, key: 'bank' }
-    ],
-    installments: { count: 3, noInterest: true, label: '3 pagos sin interés con tarjeta bancaria' }
-  },
-  catalog: [
-    { sku: 'A', title: 'Cintillo Oro Blanco 18k con zafiros y circones', price: 633800, weight_g: 1.7 },
-    { sku: 'B', title: 'Cintillo Oro Blanco 18k, 5 circones', price: 720000, weight_g: 2.7 },
-    { sku: 'C', title: 'Cintillo Oro Blanco 18k con circones pequeños', price: 520000, weight_g: 1.9 }
-  ]
-};
+let business = null; // se cargará desde el archivo JSON
+
+// Función para cargar la información del negocio
+async function loadBusiness() {
+  try {
+    // En desarrollo, usar el servidor local; en producción, usar la URL configurada
+    const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const businessUrl = isDev ? 'http://localhost:3001/business.json' : '../data/business.json';
+    
+    const response = await fetch(businessUrl);
+    business = await response.json();
+  } catch (error) {
+    console.error('Error cargando business.json:', error);
+    // Fallback con datos mínimos si falla la carga
+    business = {
+      id: 'ring-jewelers',
+      name: 'Ring Jewelers',
+      defaultLocale: 'es-AR',
+      currency: 'ARS'
+    };
+  }
+}
 
 const history = [];
 
@@ -38,6 +40,12 @@ function addMsg(text, who) {
 async function send() {
   const text = inputEl.value.trim();
   if (!text) return;
+  
+  // Asegurar que business esté cargado antes de enviar
+  if (!business) {
+    await loadBusiness();
+  }
+  
   addMsg(text, 'user');
   inputEl.value = '';
   try {
@@ -57,4 +65,7 @@ async function send() {
 sendBtn.addEventListener('click', send);
 inputEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') send(); });
 
-addMsg('¡Hola! Soy tu asesor virtual. ¿Qué estás buscando hoy? 😊', 'bot');
+// Cargar business al inicializar
+loadBusiness().then(() => {
+  addMsg('¡Hola! Soy tu asesor virtual. ¿Qué estás buscando hoy? 😊', 'bot');
+});

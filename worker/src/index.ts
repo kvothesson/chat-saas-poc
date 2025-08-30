@@ -96,30 +96,17 @@ Reglas:
 
 async function fetchBusiness(env: Env): Promise<BusinessProfile> {
   if (env.BUSINESS_JSON_URL) {
-    const r = await fetch(env.BUSINESS_JSON_URL);
-    if (r.ok) return await r.json<BusinessProfile>();
+    try {
+      const r = await fetch(env.BUSINESS_JSON_URL);
+      if (r.ok) return await r.json<BusinessProfile>();
+    } catch (error) {
+      console.error('Error fetching business from URL:', error);
+    }
   }
-  // Fallback mínimo para PoC
-  return {
-    id: 'ring-jewelers',
-    name: 'Ring Jewelers',
-    defaultLocale: 'es-AR',
-    currency: 'ARS',
-    tone: { style: 'cálido, cercano, vendedor experto, emojis moderados', signoff: '¡Quedo atento a cualquier consulta!' },
-    policies: { delivery: 'Entregas en 3 a 7 días hábiles.', returns: 'Cambios dentro de 10 días con ticket.', disclaimer: 'Precios sujetos a actualización.', stock: 'Stock sujeto a confirmación.' },
-    payments: {
-      discounts: [
-        { label: '15% descuento en efectivo', percent: 15, key: 'cash' },
-        { label: '10% descuento por transferencia', percent: 10, key: 'bank' }
-      ],
-      installments: { count: 3, noInterest: true, label: '3 pagos sin interés con tarjeta bancaria' }
-    },
-    catalog: [
-      { sku: 'A', title: 'Cintillo Oro Blanco 18k con zafiros y circones', price: 633800, weight_g: 1.7, attrs: { metal: 'Oro Blanco 18k', stones: 'zafiros y circones' } },
-      { sku: 'B', title: 'Cintillo Oro Blanco 18k, 5 circones', price: 720000, weight_g: 2.7, attrs: { metal: 'Oro Blanco 18k', stones: '5 circones' } },
-      { sku: 'C', title: 'Cintillo Oro Blanco 18k con circones pequeños', price: 520000, weight_g: 1.9, attrs: { metal: 'Oro Blanco 18k', stones: 'circones pequeños' } }
-    ]
-  };
+  
+  // Fallback mínimo solo si no hay URL configurada o falla la carga
+  // En producción, esto debería ser un error o usar una URL por defecto
+  throw new Error('No se pudo cargar la información del negocio. Configure BUSINESS_JSON_URL o verifique la URL.');
 }
 
 function detectLocale(input?: string, fallback?: string) {
