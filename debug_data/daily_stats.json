@@ -1,0 +1,13 @@
+{
+  "2025-08-30": {
+    "date": "2025-08-30",
+    "total_requests": 3,
+    "total_input_tokens": 4300,
+    "total_output_tokens": 2400,
+    "total_cost_usd": 0.0037170000000000003,
+    "models_used": {
+      "llama3-70b-8192": 2,
+      "llama3-8b-8192": 1
+    }
+  }
+}

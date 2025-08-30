@@ -1,0 +1,29 @@
+[
+  {
+    "input_tokens": 1500,
+    "output_tokens": 800,
+    "total_tokens": 2300,
+    "cost_usd": 0.0015170000000000001,
+    "timestamp": "2025-08-30T00:26:20.413518",
+    "model": "llama3-70b-8192",
+    "request_id": "test_001"
+  },
+  {
+    "input_tokens": 800,
+    "output_tokens": 400,
+    "total_tokens": 1200,
+    "cost_usd": 7.200000000000002e-05,
+    "timestamp": "2025-08-30T00:26:20.414107",
+    "model": "llama3-8b-8192",
+    "request_id": "test_002"
+  },
+  {
+    "input_tokens": 2000,
+    "output_tokens": 1200,
+    "total_tokens": 3200,
+    "cost_usd": 0.002128,
+    "timestamp": "2025-08-30T00:26:20.414450",
+    "model": "llama3-70b-8192",
+    "request_id": "test_003"
+  }
+]

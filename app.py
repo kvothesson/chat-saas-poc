@@ -7,10 +7,12 @@ Reemplaza la funcionalidad del Cloudflare Worker con un servidor Flask local
 import os
 import json
 import requests
+import time
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from typing import Dict, Any, Optional
 from dotenv import load_dotenv
+from debug_tracker import debug_tracker
 
 # Cargar variables de entorno desde .env
 load_dotenv()
@@ -158,14 +160,14 @@ def detect_locale(message: str, fallback: str = 'es-AR') -> str:
     
     return fallback
 
-def call_groq(system_prompt: str, user_message: str) -> str:
-    """Llama a la API de Groq"""
+def call_groq(system_prompt: str, user_message: str) -> tuple[str, dict]:
+    """Llama a la API de Groq y retorna respuesta + info de debug"""
     print(f"🔍 DEBUG: GROQ_API_KEY = {GROQ_API_KEY}")
     print(f"🔍 DEBUG: GROQ_API_KEY type = {type(GROQ_API_KEY)}")
     print(f"🔍 DEBUG: GROQ_API_KEY length = {len(GROQ_API_KEY) if GROQ_API_KEY else 0}")
     
     if not GROQ_API_KEY:
-        return "Lo siento, no tengo acceso a la API de Groq en este momento. Por favor, configura tu GROQ_API_KEY."
+        return "Lo siento, no tengo acceso a la API de Groq en este momento. Por favor, configura tu GROQ_API_KEY.", {}
     
     try:
         payload = {
@@ -198,14 +200,38 @@ def call_groq(system_prompt: str, user_message: str) -> str:
         
         if response.status_code == 200:
             data = response.json()
-            return data['choices'][0]['message']['content']
+            
+            # Tracking de tokens y costos
+            usage = data.get('usage', {})
+            input_tokens = usage.get('prompt_tokens', 0)
+            output_tokens = usage.get('completion_tokens', 0)
+            
+            # Registrar en el tracker de debug
+            debug_tracker.track_request(
+                model=GROQ_MODEL,
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
+                request_id=f"chat_{int(time.time())}"
+            )
+            
+            # Preparar info de debug para el frontend
+            debug_info = {
+                "input_tokens": input_tokens,
+                "output_tokens": output_tokens,
+                "total_tokens": input_tokens + output_tokens,
+                "cost_usd": debug_tracker._get_model_pricing(GROQ_MODEL)["input"] * (input_tokens / 1_000_000) + 
+                           debug_tracker._get_model_pricing(GROQ_MODEL)["output"] * (output_tokens / 1_000_000),
+                "model": GROQ_MODEL
+            }
+            
+            return data['choices'][0]['message']['content'], debug_info
         else:
             print(f"🔍 DEBUG: Error response = {response.text}")
-            return f"Error en la API de Groq: {response.status_code}"
+            return f"Error en la API de Groq: {response.status_code}", {}
             
     except Exception as e:
         print(f"🔍 DEBUG: Exception = {e}")
-        return f"Error comunicándose con Groq: {str(e)}"
+        return f"Error comunicándose con Groq: {str(e)}", {}
 
 @app.route('/')
 def health_check():
@@ -245,12 +271,13 @@ def chat():
         system_prompt = build_system_prompt(business, locale, offers)
         
         # Llamar a Groq
-        reply = call_groq(system_prompt, message)
+        reply, debug_info = call_groq(system_prompt, message)
         
         return jsonify({
             "reply": reply,
             "locale": locale,
-            "business": business.id
+            "business": business.id,
+            "debug_info": debug_info
         })
         
     except Exception as e:
@@ -274,11 +301,73 @@ def get_business():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route('/debug/stats', methods=['GET'])
+def get_debug_stats():
+    """Endpoint para obtener estadísticas de debug"""
+    try:
+        summary_type = request.args.get('type', 'today')
+        
+        if summary_type == 'today':
+            data = debug_tracker.get_daily_summary()
+        elif summary_type == 'month':
+            data = debug_tracker.get_monthly_summary()
+        elif summary_type == 'total':
+            data = debug_tracker.get_total_summary()
+        else:
+            return jsonify({"error": "Tipo de resumen inválido. Use: today, month, total"}), 400
+        
+        return jsonify(data)
+        
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/debug/summary', methods=['GET'])
+def print_debug_summary():
+    """Endpoint para imprimir resumen de debug en consola"""
+    try:
+        summary_type = request.args.get('type', 'today')
+        debug_tracker.print_summary(summary_type)
+        return jsonify({"message": f"Resumen de {summary_type} impreso en consola"})
+        
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/debug/usage_log', methods=['GET'])
+def get_usage_log():
+    """Endpoint para obtener el log detallado de uso"""
+    try:
+        # Obtener los últimos 100 registros
+        recent_logs = debug_tracker.usage_log[-100:] if debug_tracker.usage_log else []
+        return jsonify(recent_logs)
+        
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/debug')
+def debug_dashboard():
+    """Servir el dashboard de debug"""
+    try:
+        with open('site/debug.html', 'r', encoding='utf-8') as f:
+            return f.read(), 200, {'Content-Type': 'text/html'}
+    except FileNotFoundError:
+        return "Dashboard de debug no encontrado", 404
+    except Exception as e:
+        return f"Error cargando dashboard: {str(e)}", 500
+
 if __name__ == '__main__':
     print("🚀 Iniciando Chat SaaS PoC Backend...")
     print(f"📊 Modelo Groq: {GROQ_MODEL}")
     print(f"🔑 Groq API Key: {'✅ Configurada' if GROQ_API_KEY else '❌ No configurada'}")
     print(f"📁 Datos del negocio: {BUSINESS_JSON_PATH}")
     print("🌐 Servidor iniciando en http://localhost:5001")
+    
+    # Mostrar estado del debug tracker
+    if debug_tracker.debug_mode:
+        print("🔍 DEBUG MODE: Activado - Tracking de tokens y costos habilitado")
+        print("📊 Endpoints de debug disponibles:")
+        print("   • GET /debug/stats?type=today|month|total")
+        print("   • GET /debug/summary?type=today|month|total")
+    else:
+        print("🔍 DEBUG MODE: Desactivado - Para activar, set GROQ_DEBUG=true")
     
     app.run(host='0.0.0.0', port=5001, debug=True)
