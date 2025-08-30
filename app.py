@@ -350,7 +350,7 @@ if __name__ == '__main__':
     print(f"📊 Modelo Groq: {GROQ_MODEL}")
     print(f"🔑 Groq API Key: {'✅ Configurada' if GROQ_API_KEY else '❌ No configurada'}")
     print(f"📁 Datos del negocio: {BUSINESS_JSON_PATH}")
-    print("🌐 Servidor iniciando en http://localhost:5001")
+    print("🌐 Servidor iniciando en http://localhost:5002")
     
     # Mostrar estado del debug tracker
     if debug_tracker.debug_mode:
@@ -361,4 +361,4 @@ if __name__ == '__main__':
     else:
         print("🔍 DEBUG MODE: Desactivado - Para activar, set GROQ_DEBUG=true")
     
-    app.run(host='0.0.0.0', port=5001, debug=True)
+    app.run(host='0.0.0.0', port=5002, debug=True)
