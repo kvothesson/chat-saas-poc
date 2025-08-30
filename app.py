@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Chat SaaS PoC Backend
-Reemplaza la funcionalidad del Cloudflare Worker con un servidor Flask local
+Servidor Flask local para el asistente de chat
 """
 
 import os
@@ -162,10 +162,6 @@ def detect_locale(message: str, fallback: str = 'es-AR') -> str:
 
 def call_groq(system_prompt: str, user_message: str) -> tuple[str, dict]:
     """Llama a la API de Groq y retorna respuesta + info de debug"""
-    print(f"🔍 DEBUG: GROQ_API_KEY = {GROQ_API_KEY}")
-    print(f"🔍 DEBUG: GROQ_API_KEY type = {type(GROQ_API_KEY)}")
-    print(f"🔍 DEBUG: GROQ_API_KEY length = {len(GROQ_API_KEY) if GROQ_API_KEY else 0}")
-    
     if not GROQ_API_KEY:
         return "Lo siento, no tengo acceso a la API de Groq en este momento. Por favor, configura tu GROQ_API_KEY.", {}
     
@@ -185,18 +181,12 @@ def call_groq(system_prompt: str, user_message: str) -> tuple[str, dict]:
             "Content-Type": "application/json"
         }
         
-        print(f"🔍 DEBUG: Headers enviados = {headers}")
-        print(f"🔍 DEBUG: Authorization header = Bearer {GROQ_API_KEY[:10]}..." if GROQ_API_KEY else "None")
-        
         response = requests.post(
             "https://api.groq.com/openai/v1/chat/completions",
             json=payload,
             headers=headers,
             timeout=30
         )
-        
-        print(f"🔍 DEBUG: Status code = {response.status_code}")
-        print(f"🔍 DEBUG: Response headers = {dict(response.headers)}")
         
         if response.status_code == 200:
             data = response.json()
@@ -214,7 +204,7 @@ def call_groq(system_prompt: str, user_message: str) -> tuple[str, dict]:
                 request_id=f"chat_{int(time.time())}"
             )
             
-            # Preparar info de debug para el frontend
+            # Preparar info de debug
             debug_info = {
                 "input_tokens": input_tokens,
                 "output_tokens": output_tokens,
@@ -226,11 +216,9 @@ def call_groq(system_prompt: str, user_message: str) -> tuple[str, dict]:
             
             return data['choices'][0]['message']['content'], debug_info
         else:
-            print(f"🔍 DEBUG: Error response = {response.text}")
             return f"Error en la API de Groq: {response.status_code}", {}
             
     except Exception as e:
-        print(f"🔍 DEBUG: Exception = {e}")
         return f"Error comunicándose con Groq: {str(e)}", {}
 
 @app.route('/')
@@ -273,11 +261,25 @@ def chat():
         # Llamar a Groq
         reply, debug_info = call_groq(system_prompt, message)
         
+        # Preparar información de costos para el cliente
+        usage_info = {
+            "tokens": {
+                "input": debug_info.get("input_tokens", 0),
+                "output": debug_info.get("output_tokens", 0),
+                "total": debug_info.get("total_tokens", 0)
+            },
+            "cost": {
+                "usd": debug_info.get("cost_usd", 0),
+                "formatted": f"${debug_info.get('cost_usd', 0):.6f}"
+            },
+            "model": debug_info.get("model", GROQ_MODEL)
+        }
+        
         return jsonify({
             "reply": reply,
             "locale": locale,
             "business": business.id,
-            "debug_info": debug_info
+            "usage": usage_info
         })
         
     except Exception as e:
@@ -342,17 +344,6 @@ def get_usage_log():
         
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-@app.route('/debug')
-def debug_dashboard():
-    """Servir el dashboard de debug"""
-    try:
-        with open('site/debug.html', 'r', encoding='utf-8') as f:
-            return f.read(), 200, {'Content-Type': 'text/html'}
-    except FileNotFoundError:
-        return "Dashboard de debug no encontrado", 404
-    except Exception as e:
-        return f"Error cargando dashboard: {str(e)}", 500
 
 if __name__ == '__main__':
     print("🚀 Iniciando Chat SaaS PoC Backend...")
