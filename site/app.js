@@ -14,16 +14,16 @@ async function loadBusiness() {
     const businessUrl = isDev ? 'http://localhost:3001/business.json' : '../data/business.json';
     
     const response = await fetch(businessUrl);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
     business = await response.json();
+    console.log('✅ Datos del negocio cargados exitosamente:', business.name);
   } catch (error) {
-    console.error('Error cargando business.json:', error);
-    // Fallback con datos mínimos si falla la carga
-    business = {
-      id: 'ring-jewelers',
-      name: 'Ring Jewelers',
-      defaultLocale: 'es-AR',
-      currency: 'ARS'
-    };
+    console.error('❌ Error cargando business.json:', error);
+    // No usar datos hardcodeados - mostrar error al usuario
+    business = null;
+    addMsg('⚠️ Error: No se pudieron cargar los datos del negocio. Por favor, recarga la página o contacta al administrador.', 'bot');
   }
 }
 
@@ -41,9 +41,16 @@ async function send() {
   const text = inputEl.value.trim();
   if (!text) return;
   
-  // Asegurar que business esté cargado antes de enviar
+  // Verificar que business esté cargado antes de enviar
   if (!business) {
+    addMsg('⏳ Cargando datos del negocio...', 'bot');
     await loadBusiness();
+    
+    // Si después de intentar cargar sigue siendo null, no continuar
+    if (!business) {
+      addMsg('❌ No se pueden enviar mensajes sin los datos del negocio. Por favor, recarga la página.', 'bot');
+      return;
+    }
   }
   
   addMsg(text, 'user');
